@@ -1,6 +1,7 @@
 import { View, Text, SafeAreaView, Image, StyleSheet,TextInput,Pressable } from 'react-native'
 import React from 'react'
 import Button from '../component/button';
+import Input from '../component/input';
 
 export default function Signup() {
   return (
@@ -9,16 +10,24 @@ export default function Signup() {
           
      </View>
       <View style={{paddingVertical:25, paddingHorizontal:16}}>
-        <TextInput
-            style={styles.input}
-            placeholder="Email"
-          />
-          <TextInput
-            style={styles.input}
-            placeholder="Password"
-            secureTextEntry
-          />
+        <Input placeholder="Email"/>
+        <Input placeholder="Password" secureTextEntry/>
+        <Input placeholder="Full Name"/>
+        <Input placeholder="Age"/>
       </View>
+        <Pressable style={styles.radioContainer}>
+          <View style={styles.outerCircle}>
+              <View style={styles.innerCircle}></View>
+          </View>
+          <Text>Male</Text>
+        </Pressable>
+        <Pressable style={styles.radioContainer}>
+          <View style={styles.outerCircle}>
+              <View style={styles.innerCircle}></View>
+          </View>
+          <Text>Female</Text>
+        </Pressable>
+     
        <View style={{ justifyContent:'flex-end', alignSelf:'center'}}>
           <Button title="Sign Up" customStyles={{alignSelf:'center',marginTop:60}}/>
        </View>
@@ -56,6 +65,19 @@ const styles = StyleSheet.create({
       justifyContent:'flex-end',
       alignItems:'center',
       paddingBottom:40,
+    },
+    radioContainer: {
+      flexDirection: "row",
+      alignItems:"center",
+      marginBottom:10,
+    },
+    outerCircle:{
+      width:15,
+      height:15,
+      borderWidth:1,
+      borderRadius:"50%",
+      color:"#cfcfcf",
+      marginRight:15,
     }
 });
 
