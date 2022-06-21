@@ -1,4 +1,4 @@
-import { StatusBar } from 'expo-status-bar';
+
 import { StyleSheet, Text, View } from 'react-native';
 import { NavigationContainer,DefaultTheme } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -7,7 +7,18 @@ import Signin from './src/screens/signin';
 import Signup from './src/screens/signup';
 import Create from './src/screens/create';
 import Edit from './src/screens/edit';
-
+import { initializeApp } from "firebase/app";
+// Your web app's Firebase configuration
+const firebaseConfig = {
+  apiKey: "AIzaSyCb0musrqWAi6u3yuQpbkBIvpcq-ifvtXo",
+  authDomain: "note-app-f9e30.firebaseapp.com",
+  projectId: "note-app-f9e30",
+  storageBucket: "note-app-f9e30.appspot.com",
+  messagingSenderId: "658466109116",
+  appId: "1:658466109116:web:a4d8906362d657946582b9"
+};
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
 
 const applyTheme = {
   ...DefaultTheme,
