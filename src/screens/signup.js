@@ -2,33 +2,43 @@ import { View, Text, SafeAreaView, Image, StyleSheet,TextInput,Pressable } from 
 import React, { useState } from 'react'
 import Button from '../component/button';
 import Input from '../component/input';
- import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import {  createUserWithEmailAndPassword } from "firebase/auth";
+import { auth, db } from './../../App';
+import { collection, addDoc } from "firebase/firestore";
+import { showMessage} from "react-native-flash-message";
 
 
-const auth = getAuth();
+
 const genderOption =['Male','Female'];
 
 export default function Signup({navigation}) {
       const [gender,setGender] = useState(null);
     	const [email,setEmail] = useState('');
-      console.log(email);
       const [password,setPass] = useState('');
       const [age,setAge]  = useState('');
       const [name,setName] = useState('');
-      const signUp = () => {
-        createUserWithEmailAndPassword(auth, email, password)
-            .then((userCredential) => {
-              // Signed in 
-              const user = userCredential.user;
-              // ...
-              console.log(user);
-            })
-            .catch((error) => {
-              const errorCode = error.code;
-              const errorMessage = error.message;
-              // ..
-              console.log(errorMessage);
+      const [loading,setLoading] = useState(true);
+      const signUp = async () => {
+        try {
+          //create user with email and password
+          const result =  await createUserWithEmailAndPassword(auth,email,password);
+          //add user profile to database
+          setLoading(true);
+          await addDoc(collection(db, "users"), {
+            name:name,
+            age:age,
+            gender:gender,
+            uid:result.user.uid,
+          });
+          setLoading(false);
+         } catch(error){
+            showMessage({
+              message: "FIREBASE ERROR",
+              type: "info",
             }); 
+        }
+        setLoading(false);
+        //navigate to authenticated screen
       }
      
   return (

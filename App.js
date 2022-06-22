@@ -1,5 +1,5 @@
 
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, ActivityIndicator } from 'react-native';
 import { NavigationContainer,DefaultTheme } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Home from './src/screens/home';
@@ -8,6 +8,11 @@ import Signup from './src/screens/signup';
 import Create from './src/screens/create';
 import Edit from './src/screens/edit';
 import { initializeApp } from "firebase/app";
+import { getAuth,signOut,onAuthStateChanged} from "firebase/auth";
+import { getFirestore } from "firebase/firestore";
+import FlashMessage from "react-native-flash-message";
+import { useEffect, useState } from 'react';
+
 // Your web app's Firebase configuration
 const firebaseConfig = {
   apiKey: "AIzaSyCb0musrqWAi6u3yuQpbkBIvpcq-ifvtXo",
@@ -19,7 +24,8 @@ const firebaseConfig = {
 };
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-
+export const auth = getAuth(app);
+export const db = getFirestore(app);
 const applyTheme = {
   ...DefaultTheme,
   colors:{
@@ -30,7 +36,29 @@ const applyTheme = {
 const Stack = createNativeStackNavigator();
 
 export default function App() {
-  const user = false; // not authenticated 
+  [loading,setLoading] = useState(true);
+  [user,setUser] = useState(null); // not authenticated 
+ 
+  useEffect(()=>{
+      const authSubscription =  onAuthStateChanged(auth,(user)=>{
+          if(user){
+            setUser(user);
+            setLoading(false);
+          }else{
+            setUser(null);
+            setLoading(false);
+          }
+          return authSubscription;
+      });
+  },[]);
+ 
+  if(loading){
+      return(
+         <View style={{flex:1, justifyContent:'center', alignItems:'center'}}>
+             <ActivityIndicator size="small" color="blue" />
+         </View>
+      )
+  }
   return (
       <NavigationContainer theme={applyTheme}>
             <Stack.Navigator>
@@ -44,9 +72,12 @@ export default function App() {
                   <Stack.Screen name="Signup" component={Signup} />
               </>)}   
             </Stack.Navigator>
+            <FlashMessage position="center"/> 
       </NavigationContainer>
+      
   );
 }
+
 
 const styles = StyleSheet.create({
   container: {
